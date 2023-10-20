@@ -14,14 +14,14 @@ def test_initial_nominees(runoff, nominees, sender):
     assert nominees[0].address == runoff.nominees(0)
     assert nominees[1].address == runoff.nominees(1)
     assert nominees[2].address == runoff.nominees(2)
-    
+
     assert runoff.nominee_names(0) == "Mark Dwane"
-    assert runoff.nominee_names(1) == "Joe Doe" 
-    assert runoff.nominee_names(2) == "Jane Doe" 
+    assert runoff.nominee_names(1) == "Joe Doe"
+    assert runoff.nominee_names(2) == "Jane Doe"
 
     with ape.reverts("Runoff: nominee already reigstred"):
         runoff.add_nominee(nominees[0].address, "Mark Dwane", sender=sender)
-    
+
     with ape.reverts("Runoff: maximum amount of nominees reached"):
         runoff.add_nominee(sender.address, "The Sender", sender=sender)
 

@@ -1,4 +1,4 @@
-# pragma version ^0.3.10
+#pragma version ^0.3.9
 
 
 # @dev We our custom `ERC20` interface,

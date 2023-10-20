@@ -1,1 +1,10 @@
 name: voting-system
+
+plugins:
+  - name: vyper
+  - name: alchemy
+  - name: polygon
+  - name: etherscan
+
+vyper:
+  evm_version: paris

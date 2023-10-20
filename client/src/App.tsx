@@ -1,4 +1,4 @@
-import { WagmiConfig, createConfig, useAccount } from "wagmi";
+import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, ConnectKitButton, getDefaultConfig } from "connectkit";
 import { Separator } from "./components/ui/separator";
 import { ThemeProvider } from "./components/theme-provider";
@@ -9,6 +9,7 @@ import { Register } from "./pages/Register";
 import { Vote } from "./pages/Vote";
 import { Results } from "./pages/Results";
 import { Elections } from "./pages/Elections";
+import { polygon, polygonMumbai } from "viem/chains";
 
 const ALCHEMY_ID = import.meta.env.VITE_ALCHEMY_ID || ""
 const WALLETCONNECT_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ""
@@ -21,6 +22,7 @@ const config = createConfig(
 
     // Required
     appName: "Voting System",
+    chains: [polygonMumbai, polygon],
 
     // Optional
     appDescription: "Your App Description",

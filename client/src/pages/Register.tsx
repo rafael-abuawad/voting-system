@@ -1,14 +1,20 @@
-import { useAccount } from "wagmi";
+import { useAccount, useContractWrite } from 'wagmi'
 import { CardRegister } from "../components/card-register";
 import { CardRegistred } from "../components/card-registred";
 import { useEffect, useState } from "react";
 import { Voter } from "../types/voter";
 import { pb } from "../utils/pb";
+import Runoff from "../abis/Runoff.json"
 
 export function Register() {
     const [exists, setExists] = useState(false)
     const [voter, setVoter] = useState<Voter | any>()
     const { address } = useAccount()
+    const { data, write } = useContractWrite({
+        address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+        abi: Runoff.abi,
+        functionName: 'safe_register',
+    })
 
     async function getData() {
         setExists(false)
@@ -27,6 +33,7 @@ export function Register() {
         const record = await pb.collection('voters').create(data);
         setExists(true)
         setVoter(data)
+        write({ args: [address, record.id] })
         console.log(record)
     }
 

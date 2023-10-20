@@ -92,6 +92,12 @@ _voters: HashMap[uint256, address]
 _address_is_registred: HashMap[address, bool]
 
 
+
+# @dev Mapping from voter address to if they have
+# voted or not.
+_address_has_voted: HashMap[address, bool]
+
+
 # @dev Array with all voter IDs used for enumeration.
 _all_voters: DynArray[uint256, max_value(uint64)]
 
@@ -238,11 +244,24 @@ def vote(for_: address):
     @param for_ The addresss of the nominee the voter is voting
                 for.
     """
+    assert self.isOngoing == True, "Runoff: voting is not on-going"
+    assert not self.isDone , "Runoff: voting period is complete"
     assert for_ in self.nominees, "Runoff: `for` address not registred as nominee"
+    assert not self._address_has_voted[msg.sender], "Runoff: msg.sender has already voted"
 
     token: IERC20Vote = IERC20Vote(_TOKEN)
     amount: uint256 = token.one_vote()
     token.transferFrom(msg.sender, for_, amount)
+
+
+@external
+@view
+def hasVoted(addr: address) -> bool:
+    """
+    @dev Returns if the user has voted or not.
+    @return addr The 20-byte voter address.
+    """
+    return self._address_has_voted[addr]
 
 
 @external

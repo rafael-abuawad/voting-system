@@ -2,7 +2,8 @@ import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, ConnectKitButton, getDefaultConfig } from "connectkit";
 import { Separator } from "./components/ui/separator";
 import { ThemeProvider } from "./components/theme-provider";
-import { MainTabs } from "./components/main-tabs";
+import { Home } from "./pages/Home";
+
 
 const ALCHEMY_ID = "2C1-qMpfsZWBlm_DNKQBsMxknHknq1gC"
 
@@ -40,12 +41,10 @@ const App = () => {
               <ConnectKitButton />
             </div>
             <Separator />
-
-            <MainTabs />
+            <Home />
           </main>
         </ConnectKitProvider>
       </WagmiConfig>
-
     </ThemeProvider>
   );
 };

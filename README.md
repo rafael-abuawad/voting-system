@@ -6,7 +6,7 @@ Start pocketbase server
 ```bash
 $ cd ./ipfs
 $ make run
-``
+```
 
 Go to [http://127.0.0.1:8090/_](http://127.0.0.1:8090/_)
 

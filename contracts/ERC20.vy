@@ -1,4 +1,4 @@
-#pragma version ^0.3.9
+#pragma version ^0.3.0
 
 # @dev We import and implement our custom `ERC20Vote`
 # interface, which is written using standard Vyper

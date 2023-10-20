@@ -4,10 +4,6 @@ import { useAccount } from "wagmi";
 import { NoAccount } from "./components/no-account";
 
 export function Layout() {
-    const {isConnected} = useAccount()
-    if (!isConnected) {
-        return <NoAccount />
-    }
     return (
         <Tabs defaultValue="register" className="w-full p-6 pb-0">
             <TabsList className="grid w-full grid-cols-3 h-full">

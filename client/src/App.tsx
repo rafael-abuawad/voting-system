@@ -1,10 +1,14 @@
-import { WagmiConfig, createConfig } from "wagmi";
+import { WagmiConfig, createConfig, useAccount } from "wagmi";
 import { ConnectKitProvider, ConnectKitButton, getDefaultConfig } from "connectkit";
 import { Separator } from "./components/ui/separator";
 import { ThemeProvider } from "./components/theme-provider";
-import { Home } from "./pages/Home";
 import { ModeToggle } from "./components/mode-toggle";
-
+import { Layout } from "./Layout";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Register } from "./pages/Register";
+import { Vote } from "./pages/Vote";
+import { Results } from "./pages/Results";
+import { Elections } from "./pages/Elections";
 
 const ALCHEMY_ID = import.meta.env.VITE_ALCHEMY_ID || ""
 const WALLETCONNECT_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ""
@@ -16,7 +20,7 @@ const config = createConfig(
     walletConnectProjectId: WALLETCONNECT_PROJECT_ID,
 
     // Required
-    appName: "Your App Name",
+    appName: "Voting System",
 
     // Optional
     appDescription: "Your App Description",
@@ -27,28 +31,52 @@ const config = createConfig(
 
 const App = () => {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <WagmiConfig config={config}>
-        <ConnectKitProvider theme="midnight" options={{ language: "es-ES" }}>
-          <main>
-            <div className="p-6 flex justify-between items-center w-full">
-              <div>
-                <h3 className="text-lg font-bold">🗳️ Sistema De Votacion</h3>
-                <p className="text-sm text-muted-foreground">
-                  Una nueva forma de hacer democracia, completamente decentralizada.
-                </p>
+    <BrowserRouter>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <WagmiConfig config={config}>
+          <ConnectKitProvider options={{ language: "es-ES" }}>
+            <main>
+              <div className="p-6 flex justify-between items-center w-full">
+                <div>
+                  <h3 className="text-lg font-bold">🗳️ Sistema De Votacion</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Una nueva forma de hacer democracia, completamente decentralizada.
+                  </p>
+                </div>
+                <div className="flex space-x-2 items-center">
+                  <ConnectKitButton />
+                  <ModeToggle />
+                </div>
               </div>
-              <div className="flex space-x-2 items-center">
-                <ConnectKitButton />
-                <ModeToggle />
-              </div>
-            </div>
-            <Separator />
-            <Home />
-          </main>
-        </ConnectKitProvider>
-      </WagmiConfig>
-    </ThemeProvider>
+              <Separator />
+
+              {/* Views */}
+              <Layout />
+
+              {/* Router */}
+              <Routes>
+                <Route
+                  index
+                  element={<Register />}
+                />
+                <Route
+                  path="vote"
+                  element={<Vote />}
+                />
+                <Route
+                  path="vote/elections"
+                  element={<Elections />}
+                />
+                <Route
+                  path="results"
+                  element={<Results />}
+                />
+              </Routes>
+            </main>
+          </ConnectKitProvider>
+        </WagmiConfig>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 };
 

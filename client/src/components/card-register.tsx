@@ -1,26 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card";
 import { Input } from "./ui/input";
-import { saveVoterMetadata } from "../utils/generate-voter-metadata";
 import { useAccount } from "wagmi";
+import { Voter } from "../types/voter";
 
-export function CardRegister() {
+export function CardRegister({ register }: { register: (v: Voter) => void }) {
     const [name, setName] = useState("")
     const [age, setAge] = useState(0)
     const [email, setEmail] = useState("")
+    const [isValid, setIsValid] = useState(false)
     const { address } = useAccount() 
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        try {
-            const id = await saveVoterMetadata({ name, age, email, address: address ? address : "" });
-            console.log(id)
-        } catch (err) {
-            console.error(err)
-        }
+        let addr = address ? address : ""
+        register({name, age, email, address: addr})
     }
+
+    useEffect(() => {
+        setIsValid(true)
+        if (email == "") {
+            setIsValid(false)
+        }
+        if (name == "") {
+            setIsValid(false)
+        }
+        if(age == 0) {
+            setIsValid(false)
+        }
+
+    }, [name, age, email])
 
     return (
         <form onSubmit={handleSubmit}>
@@ -46,7 +57,7 @@ export function CardRegister() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit">Registrarse</Button>
+                    <Button disabled={!isValid} type="submit">Registrarse</Button>
                 </CardFooter>
             </Card>
         </form>

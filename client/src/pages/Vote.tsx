@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 
 
-export function Vote() {
+export function Vote({ results = false }: Boolean) {
     return (
         <div className="p-6">
             <div className="grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -24,8 +24,8 @@ export function Vote() {
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-between">
-                        <Link to="/vote/elections" className="w-full">
-                            <Button className="w-full" >Votar!</Button>
+                        <Link to={results ? "/vote/results" : "/vote/elections"} className="w-full">
+                            <Button className="w-full" >{results ? 'Ver resultados' : 'Votar!'}</Button>
                         </Link>
                     </CardFooter>
                 </Card>

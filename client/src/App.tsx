@@ -71,6 +71,10 @@ const App = () => {
                 />
                 <Route
                   path="results"
+                  element={<Vote results={true} />}
+                />
+                <Route
+                  path="vote/results"
                   element={<Results />}
                 />
               </Routes>

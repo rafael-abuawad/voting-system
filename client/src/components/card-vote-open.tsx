@@ -7,11 +7,11 @@ export function CardVoteOpen() {
     return (
         <div className="space-y-6">
             <div>
-                  <h3 className="text-lg font-bold">Votar</h3>
-                  <p className="text-sm text-muted-foreground">
-                        Elija a su candidato preferido.
-                  </p>
-                </div>
+                <h3 className="text-lg font-bold">Votar</h3>
+                <p className="text-sm text-muted-foreground">
+                    Elija a su candidato preferido.
+                </p>
+            </div>
             <div>
                 <RadioGroup defaultValue="comfortable" className="grid grid-cols-2 lg:grid-cols-3">
                     <div className="flex items-center space-x-2">

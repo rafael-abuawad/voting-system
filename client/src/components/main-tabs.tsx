@@ -16,9 +16,10 @@ export function MainTabs() {
 
     return (
         <Tabs defaultValue="vote" className="w-full p-6">
-            <TabsList className="grid w-full grid-cols-2 h-full mb-6">
+            <TabsList className="grid w-full grid-cols-3 h-full mb-6">
                 <TabsTrigger value="register" className="text-lg py-3">Registro</TabsTrigger>
                 <TabsTrigger value="vote" className="text-lg py-3">Votar</TabsTrigger>
+                <TabsTrigger value="results" className="text-lg py-3">Results</TabsTrigger>
             </TabsList>
             <TabsContent value="register">
                 {/* {isRegistred ? <CardRegistred /> : <CardRegister />} */}

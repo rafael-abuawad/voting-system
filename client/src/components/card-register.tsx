@@ -4,16 +4,18 @@ import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card";
 import { Input } from "./ui/input";
 import { saveVoterMetadata } from "../utils/generate-voter-metadata";
+import { useAccount } from "wagmi";
 
 export function CardRegister() {
     const [name, setName] = useState("")
     const [age, setAge] = useState(0)
     const [email, setEmail] = useState("")
+    const { address } = useAccount() 
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         try {
-            const id = await saveVoterMetadata({ name, age, email });
+            const id = await saveVoterMetadata({ name, age, email, address: address ? address : "" });
             console.log(id)
         } catch (err) {
             console.error(err)

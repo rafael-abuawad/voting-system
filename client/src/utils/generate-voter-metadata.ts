@@ -5,6 +5,7 @@ interface Voter {
     name: string;
     age: number;
     email: string;
+    address: string;
 }
 
 export async function saveVoterMetadata(voter: Voter): Promise<string> {

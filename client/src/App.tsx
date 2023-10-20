@@ -5,9 +5,8 @@ import { ThemeProvider } from "./components/theme-provider";
 import { Home } from "./pages/Home";
 
 
-const ALCHEMY_ID = "2C1-qMpfsZWBlm_DNKQBsMxknHknq1gC"
-
-const WALLETCONNECT_PROJECT_ID = "cbb8db3ac161c49bb0d58a3f81e995fd"
+const ALCHEMY_ID = import.meta.env.VITE_ALCHEMY_ID || ""
+const WALLETCONNECT_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ""
 
 const config = createConfig(
   getDefaultConfig({

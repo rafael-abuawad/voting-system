@@ -3,7 +3,7 @@ import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card";
 import { Input } from "./ui/input";
-import { saveVoterMetadata } from "../utils/generate-voter-json";
+import { saveVoterMetadata } from "../utils/generate-voter-metadata";
 
 export function CardRegister() {
     const [name, setName] = useState("")

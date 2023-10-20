@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBU9CRwVScJI4J9CEAOeDyabpkYia1OfzM",
-    authDomain: "voting-system-1e1e6.firebaseapp.com",
-    projectId: "voting-system-1e1e6",
-    storageBucket: "voting-system-1e1e6.appspot.com",
-    messagingSenderId: "618915188505",
-    appId: "1:618915188505:web:f6094cb5179bda9528ff88"
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);

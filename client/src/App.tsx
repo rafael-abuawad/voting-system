@@ -63,7 +63,7 @@ const App = () => {
                 />
                 <Route
                   path="vote"
-                  element={<Vote />}
+                  element={<Vote results={false} />}
                 />
                 <Route
                   path="vote/elections"

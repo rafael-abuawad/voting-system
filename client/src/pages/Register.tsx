@@ -10,7 +10,7 @@ export function Register() {
     const [exists, setExists] = useState(false)
     const [voter, setVoter] = useState<Voter | any>()
     const { address } = useAccount()
-    const { data, write } = useContractWrite({
+    const { write } = useContractWrite({
         address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
         abi: Runoff.abi,
         functionName: 'safe_register',

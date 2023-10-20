@@ -266,6 +266,16 @@ def hasVoted(addr: address) -> bool:
 
 @external
 @view
+def isRegistred(addr: address) -> bool:
+    """
+    @dev Returns if the user is registred or not.
+    @return addr The 20-byte voter address.
+    """
+    return self._is_address_registred(addr)
+
+
+@external
+@view
 def voterURI(voter_id: uint256) -> String[512]:
     """
     @dev Returns the Uniform Resource Identifier (URI)

@@ -1,9 +1,72 @@
+import { useContractReads } from "wagmi";
+import { Abi } from "viem";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import Runoff from "../abis/Runoff.json"
 
 export function CardVoteOpen() {
+    const { data } = useContractReads({
+        contracts: [
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominees",
+                args: [0]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominee_names",
+                args: [0]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominees",
+                args: [1]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominee_names",
+                args: [1]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominees",
+                args: [2]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominee_names",
+                args: [2]
+            },
+        ],
+        select: (data) => {
+            const reducedArray = [];
+            let currentObject = {address:"", name:""};
+
+            for (const item of data) {
+                if ((item.result as string).startsWith('0x')) {
+                    currentObject.address = item.result as string;
+                } else if (item.status === 'success') {
+                    currentObject.name = item.result as string;
+                }
+
+                if (currentObject.address && currentObject.name) {
+                    reducedArray.push({ address: currentObject.address, name: currentObject.name });
+                    currentObject = {address:"", name:""};
+                }
+            }
+            console.log(reducedArray)
+            return reducedArray;
+        }
+    })
+
     return (
         <div className="space-y-6">
             <div>
@@ -14,60 +77,26 @@ export function CardVoteOpen() {
             </div>
             <div>
                 <RadioGroup defaultValue="comfortable" className="grid grid-cols-2 lg:grid-cols-3">
-                    <div className="flex items-center space-x-2">
-                        <Card className="w-full">
-                            <CardHeader>
-                                <CardTitle>
-                                    <div className="flex space-x-2">
-                                        <RadioGroupItem value="r1" id="r1" />
-                                        <Label htmlFor="r1" className="font-bold">Mark Dawn</Label>
+                    {data?.map((value) => (
+                        <div className="flex items-center space-x-2">
+                            <Card className="w-full">
+                                <CardHeader>
+                                    <CardTitle>
+                                        <div className="flex space-x-2">
+                                            <RadioGroupItem value={value.address} id={value.address} />
+                                            <Label htmlFor={value.address} className="font-bold">{value.name}</Label>
+                                        </div>
+                                    </CardTitle>
+                                    <CardDescription>Partido Demócrata</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div>
+                                        <img className="object-cover h-48 w-full rounded-xl" src="https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
                                     </div>
-                                </CardTitle>
-                                <CardDescription>Partido Demócrata</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div>
-                                    <img className="object-cover h-48 w-full rounded-xl" src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <Card className="w-full">
-                            <CardHeader>
-                                <CardTitle>
-                                    <div className="flex space-x-2">
-                                        <RadioGroupItem value="r2" id="r2" />
-                                        <Label htmlFor="r2" className="font-bold">Joe Doe</Label>
-                                    </div>
-                                </CardTitle>
-                                <CardDescription>Partido Demócrata</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div>
-                                    <img className="object-cover h-48 w-full rounded-xl" src="https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <Card className="w-full">
-                            <CardHeader>
-                                <CardTitle>
-                                    <div className="flex space-x-2">
-                                        <RadioGroupItem value="r3" id="r3" />
-                                        <Label htmlFor="r3" className="font-bold">Jane Doe</Label>
-                                    </div>
-                                </CardTitle>
-                                <CardDescription>Partido Demócrata</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div>
-                                    <img className="object-cover h-48 w-full rounded-xl" src="https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg" alt="" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    ))}
                 </RadioGroup>
             </div>
             <Button className="w-full">Votar!</Button>

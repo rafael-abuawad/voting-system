@@ -22,6 +22,10 @@ _TYPE_HASH: constant(bytes32) = keccak256("EIP712Domain(string name,string versi
 _PERMIT_TYPE_HASH: constant(bytes32) = keccak256("Permit(address spender,uint256 tokenId,uint256 nonce,uint256 deadline)")
 
 
+# @dev The max amount nominees the contract can store.
+_MAX_NOMINEE_COUNT: constant(uint8) = 3
+
+
 # @dev Stores the base URI for computing `tokenURI`.
 _BASE_URI: immutable(String[80])
 
@@ -53,8 +57,12 @@ _HASHED_VERSION: immutable(bytes32)
 _TOKEN: immutable(address)
 
 
-# @dev Stores all of the supported nominees addresses.
-_NOMINEES: immutable(address[3])
+# @dev Stores all of the nominees addresses.
+nominees: public(address[_MAX_NOMINEE_COUNT])
+
+
+# @dev Stores all of the nominee human-readable names.
+nominee_names: public(HashMap[uint256, String[80]])
 
 
 # @dev Returns the address of the current owner.
@@ -63,11 +71,25 @@ owner: public(address)
 
 # @dev Returns the state of the current vote.
 isOngoing: public(bool)
+
+
+# @dev Returns the state of the current vote.
 isDone: public(bool)
+
+
+# @dev An `uint256` counter variable that sets
+# the nominee ID for each `add_nominee` call and
+# then increments
+_nominee_counter: uint256
 
 
 # @dev Mapping from voter ID to voter address.
 _voters: HashMap[uint256, address]
+
+
+# @dev Mapping from voter address to if they are
+# registred or not.
+_address_is_registred: HashMap[address, bool]
 
 
 # @dev Array with all voter IDs used for enumeration.
@@ -124,7 +146,7 @@ event OwnershipTransferred:
 
 @external
 @payable
-def __init__(base_uri_: String[80], nominees_: address[3], token_: address, name_eip712_: String[50], version_eip712_: String[20]):
+def __init__(base_uri_: String[80], token_: address, name_eip712_: String[50], version_eip712_: String[20]):
     """
     @dev To omit the opcodes for checking the `msg.value`
          in the creation-time EVM bytecode, the constructor
@@ -143,10 +165,12 @@ def __init__(base_uri_: String[80], nominees_: address[3], token_: address, name
            from different versions are not compatible.
     """
     self._counter = empty(uint256)
+    self._nominee_counter = empty(uint256)
+
+    self._transfer_ownership(msg.sender)
 
     _BASE_URI = base_uri_
     _TOKEN = token_
-    _NOMINEES = nominees_
     _NAME = name_eip712_
     _VERSION = version_eip712_
     _HASHED_NAME = keccak256(name_eip712_)
@@ -157,23 +181,45 @@ def __init__(base_uri_: String[80], nominees_: address[3], token_: address, name
 
 
 @external
-def safe_register(addr: address, uri: String[432]):
+def add_nominee(nominee: address, name: String[80]):
     """
-    @dev Safely registers `voter_id` and assigns it to a `owner`.
+    @dev Safely registers `nominee` and adds it to `nominees`.
     @notice Only the owner can access this function.
             Note that `owner` cannot be the zero address.
             Also, new voters will be automatically assigned
             an incremental ID.
+    @param nominee The 20-byte address of the voter.
+    """
+    self._check_owner()
+
+
+    assert nominee not in self.nominees, "Runoff: nominee already reigstred"
+    assert self._nominee_counter < convert(_MAX_NOMINEE_COUNT, uint256), "Runoff: maximum amount of nominees reached" 
+    
+    nominee_id: uint256 = self._nominee_counter
+    self._nominee_counter = nominee_id + 1
+
+    self.nominees[nominee_id] = nominee
+    self.nominee_names[nominee_id] = name
+
+
+@external
+def safe_register(addr: address, uri: String[432]):
+    """
+    @dev Safely registers `voter_id` and assigns it to a `owner`.
     @param addr The 20-byte address of the voter.
     @param uri The maximum 432-character user-readable
            string URI for computing `voterURI`.
     """
-    assert addr not in _NOMINEES, "Runoff: nominee address cannot be voter"
+    assert addr not in self.nominees, "Runoff: nominee address cannot be voter"
+    assert not self._is_address_registred(addr), "Runoff: address has already been registred"
 
     # New voters will be automatically assigned an incremental ID.
     # The first voter ID will be zero.
     voter_id: uint256 = self._counter
     self._counter = voter_id + 1
+
+    self._address_is_registred[addr] = True
 
     # Theoretically, the following line could overflow
     # if all 2**256 voter IDs were registred. However,
@@ -192,7 +238,7 @@ def vote(for_: address):
     @param for_ The addresss of the nominee the voter is voting
                 for.
     """
-    assert for_ in _NOMINEES, "Runoff: `for` address not registred as nominee"
+    assert for_ in self.nominees, "Runoff: `for` address not registred as nominee"
 
     token: IERC20Vote = IERC20Vote(_TOKEN)
     amount: uint256 = token.one_vote()
@@ -229,15 +275,6 @@ def voterURI(voter_id: uint256) -> String[512]:
         return concat(_BASE_URI, uint2str(voter_id))
     else:
         return ""
-
-
-@external
-@view
-def nominees() -> address[3]:
-    """
-    @dev Returns all the nominees in existence.
-    """
-    return _NOMINEES 
 
 
 @external
@@ -381,6 +418,18 @@ def _total_supply() -> uint256:
     @return uint256 The 32-byte voter supply.
     """
     return len(self._all_voters)
+
+
+@internal
+@view
+def _is_address_registred(owner: address) -> bool:
+    """
+    @dev Returns if the `owner` has been registred or not.
+    @param voter_id The 20-byte address of the voter.
+    @return bool The verification whether `onwer` is registred
+            or not.
+    """
+    return self._address_is_registred[owner]
 
 
 @internal

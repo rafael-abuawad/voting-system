@@ -17,20 +17,18 @@ def nominees(accounts):
 
 
 @pytest.fixture(scope="function")
-def token(project, accounts):
+def token(project, sender):
     return project.ERC20.deploy(
-        "Vote Token", "VTKN", "vote-token", "0.0.1", sender=accounts[0]
+        "Vote Token", "VTKN", "vote-token", "0.0.1", sender=sender
     )
 
 
 @pytest.fixture(scope="function")
-def runoff(project, accounts, token):
-    nominees = [accounts[1].address, accounts[2].address, accounts[3].address]
+def runoff(project, sender, token):
     return project.Runoff.deploy(
         "https://ipfs.io/ipfs/QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/",
-        nominees,
         token.address,
         "runoff",
         "0.0.1",
-        sender=accounts[0],
+        sender=sender,
     )

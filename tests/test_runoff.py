@@ -6,9 +6,24 @@ VOTER2_URI = "https://ipfs.io/ipfs/QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4a
 VOTER3_URI = "https://ipfs.io/ipfs/QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/3"
 
 
-def test_initial_nominees(runoff, nominees):
-    for nominee in nominees:
-        assert nominee in runoff.nominees()
+def test_initial_nominees(runoff, nominees, sender):
+    runoff.add_nominee(nominees[0].address, "Mark Dwane", sender=sender)
+    runoff.add_nominee(nominees[1].address, "Joe Doe", sender=sender)
+    runoff.add_nominee(nominees[2].address, "Jane Doe", sender=sender)
+
+    assert nominees[0].address == runoff.nominees(0)
+    assert nominees[1].address == runoff.nominees(1)
+    assert nominees[2].address == runoff.nominees(2)
+    
+    assert runoff.nominee_names(0) == "Mark Dwane"
+    assert runoff.nominee_names(1) == "Joe Doe" 
+    assert runoff.nominee_names(2) == "Jane Doe" 
+
+    with ape.reverts("Runoff: nominee already reigstred"):
+        runoff.add_nominee(nominees[0].address, "Mark Dwane", sender=sender)
+    
+    with ape.reverts("Runoff: maximum amount of nominees reached"):
+        runoff.add_nominee(sender.address, "The Sender", sender=sender)
 
 
 def test_initial_state(
@@ -23,10 +38,16 @@ def test_register_voter(token, runoff, voters, nominees, sender):
     token.transfer_ownership(runoff.address, sender=sender)
     assert token.owner() == runoff.address
 
+    runoff.add_nominee(nominees[0].address, "Mark Dwane", sender=sender)
+
+    # adds voter
     voter = voters[0]
     runoff.safe_register(voter.address, "1", sender=voter)
     assert runoff.totalVoters() == 1
     assert runoff.voterURI(0) == VOTER1_URI
+
+    with ape.reverts("Runoff: address has already been registred"):
+        runoff.safe_register(voter.address, "1", sender=voter)
 
     with ape.reverts("Runoff: nominee address cannot be voter"):
         nominee = nominees[0]
@@ -37,6 +58,11 @@ def test_register_voter_and_voter_votes(token, runoff, voters, nominees, sender)
     # makes the `runoff` the token new owner
     token.transfer_ownership(runoff.address, sender=sender)
     assert token.owner() == runoff.address
+
+    # register all nominees
+    runoff.add_nominee(nominees[0].address, "Mark Dwane", sender=sender)
+    runoff.add_nominee(nominees[1].address, "Joe Doe", sender=sender)
+    runoff.add_nominee(nominees[2].address, "Jane Doe", sender=sender)
 
     # register multple voters
     voter1 = voters[0]

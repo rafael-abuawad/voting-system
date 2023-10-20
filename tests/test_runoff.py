@@ -45,6 +45,7 @@ def test_register_voter(token, runoff, voters, nominees, sender):
     runoff.safe_register(voter.address, "1", sender=voter)
     assert runoff.totalVoters() == 1
     assert runoff.voterURI(0) == VOTER1_URI
+    assert runoff.hasVoted(voter.address) == False
 
     with ape.reverts("Runoff: address has already been registred"):
         runoff.safe_register(voter.address, "1", sender=voter)
@@ -80,6 +81,9 @@ def test_register_voter_and_voter_votes(token, runoff, voters, nominees, sender)
     assert runoff.totalVoters() == 3
     assert runoff.voterURI(2) == VOTER3_URI
 
+    with ape.reverts("Runoff: voting period hasn't been started yet"):
+        runoff.vote(nominee.address, sender=voter2)
+
     # starts the voting period
     runoff.start(sender=sender)
     assert runoff.isOngoing() == True
@@ -113,6 +117,10 @@ def test_register_voter_and_voter_votes(token, runoff, voters, nominees, sender)
     runoff.complete(sender=sender)
     assert runoff.isOngoing() == False
     assert runoff.isDone() == True
+
+    # reverts on trying to vote when over
+    with ape.reverts("Runoff: voting period already finished"):
+        runoff.vote(nominee.address, sender=voter2)
 
     # reverts on re-start
     with ape.reverts("Runoff: voting period already finished"):

@@ -244,8 +244,8 @@ def vote(for_: address):
     @param for_ The addresss of the nominee the voter is voting
                 for.
     """
-    assert self.isOngoing == True, "Runoff: voting is not on-going"
-    assert not self.isDone , "Runoff: voting period is complete"
+    assert self.isOngoing == True, "Runoff: voting period hasn't been started yet"
+    assert not self.isDone, "Runoff: voting period already finished"
     assert for_ in self.nominees, "Runoff: `for` address not registred as nominee"
     assert not self._address_has_voted[msg.sender], "Runoff: msg.sender has already voted"
 

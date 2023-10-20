@@ -3,6 +3,7 @@ import { ConnectKitProvider, ConnectKitButton, getDefaultConfig } from "connectk
 import { Separator } from "./components/ui/separator";
 import { ThemeProvider } from "./components/theme-provider";
 import { Home } from "./pages/Home";
+import { ModeToggle } from "./components/mode-toggle";
 
 
 const ALCHEMY_ID = import.meta.env.VITE_ALCHEMY_ID || ""
@@ -37,7 +38,10 @@ const App = () => {
                   Una nueva forma de hacer democracia, completamente decentralizada.
                 </p>
               </div>
-              <ConnectKitButton />
+              <div className="flex space-x-2 items-center">
+                <ConnectKitButton />
+                <ModeToggle />
+              </div>
             </div>
             <Separator />
             <Home />

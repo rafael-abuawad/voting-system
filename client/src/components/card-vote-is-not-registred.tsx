@@ -9,8 +9,8 @@ export function CardVoteIsNotRegistred() {
                 <CardTitle>Votar</CardTitle>
                 <CardDescription>
                     Aun no se a registrado para votar!<br></br>
-                    <Button variant="link">
-                        <Link to={"/"}>Register</Link>
+                    <Button variant="link" className="px-0">
+                        <Link to={"/"}>Registrarse</Link>
                     </Button>
                 </CardDescription>
             </CardHeader>

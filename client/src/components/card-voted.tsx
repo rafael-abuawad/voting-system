@@ -5,7 +5,7 @@ export function CardVoted() {
         <Card>
             <CardHeader>
                 <CardTitle>Votar</CardTitle>
-                <CardDescription>✔ Usted ya votó! Muchas graicas</CardDescription>
+                <CardDescription>✔ Usted ya votó! Muchas gracias.</CardDescription>
             </CardHeader>
         </Card>
     );

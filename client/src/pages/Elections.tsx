@@ -10,7 +10,7 @@ export function Elections() {
     const { address } = useAccount();
 
     const { data: isRegistred } = useContractRead({
-        address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+        address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
         abi: Runoff.abi,
         functionName: "isRegistred",
         args: [address],
@@ -20,7 +20,7 @@ export function Elections() {
     });
 
     const { data: isOngoing } = useContractRead({
-        address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+        address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
         abi: Runoff.abi,
         functionName: "isOngoing",
         select(data) {
@@ -29,7 +29,7 @@ export function Elections() {
     });
 
     const { data: isDone } = useContractRead({
-        address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+        address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
         abi: Runoff.abi,
         functionName: "isDone",
         select(data) {
@@ -38,7 +38,7 @@ export function Elections() {
     });
 
     const { data: hasVoted } = useContractRead({
-        address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+        address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
         abi: Runoff.abi,
         functionName: "hasVoted",
         args: [address],

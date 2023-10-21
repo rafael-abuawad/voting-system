@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import Runoff from "../abis/Runoff.json";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import { CardVoted } from "./card-voted";
 
 export function CardVoteOpen() {
     const [value, setValue] = useState("");
@@ -14,37 +15,37 @@ export function CardVoteOpen() {
     const { data } = useContractReads({
         contracts: [
             {
-                address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+                address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
                 abi: Runoff.abi as Abi,
                 functionName: "nominees",
                 args: [0],
             },
             {
-                address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+                address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
                 abi: Runoff.abi as Abi,
                 functionName: "nominee_names",
                 args: [0],
             },
             {
-                address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+                address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
                 abi: Runoff.abi as Abi,
                 functionName: "nominees",
                 args: [1],
             },
             {
-                address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+                address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
                 abi: Runoff.abi as Abi,
                 functionName: "nominee_names",
                 args: [1],
             },
             {
-                address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+                address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
                 abi: Runoff.abi as Abi,
                 functionName: "nominees",
                 args: [2],
             },
             {
-                address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+                address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
                 abi: Runoff.abi as Abi,
                 functionName: "nominee_names",
                 args: [2],
@@ -72,7 +73,7 @@ export function CardVoteOpen() {
     });
 
     const { isLoading, isSuccess, write } = useContractWrite({
-        address: "0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc",
+        address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
         abi: Runoff.abi,
         functionName: "vote",
     });
@@ -83,6 +84,10 @@ export function CardVoteOpen() {
             args: [value],
         });
         setValue("");
+    }
+
+    if (isSuccess) {
+        return <CardVoted />;
     }
 
     return (

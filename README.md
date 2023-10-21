@@ -1,5 +1,30 @@
 # Voting System
 
+## Setup Apeworx
+
+```
+python3 -m venv .venv
+# activate
+```
+
+```
+pip install eth-ape
+```
+
+```
+ape plugins install vyper polygon alchemy etherscan
+```
+
+```
+ape accounts generate sender
+```
+
+```
+ape compile
+ape test
+ape run scripts/deploy.py --network polygon:mumbai:alchemy
+```
+
 ## Pocketbase Server
 
 Start pocketbase server
@@ -15,7 +40,5 @@ Use the following
 email=demo@mail.com
 password=2L@.jQJemz:DE9!
 ```
-
-
-[Token Smart-Contract](https://mumbai.polygonscan.com/address/0x0063F86f123BDb2dC047B26c2Fe5a631d7Dde5d4)
-[Runoff Smart-Contract](https://mumbai.polygonscan.com/address/0xb5a1F2218a49B78ff855d9caE8E01e179E353ffc)
+[Token Smart-Contract](https://mumbai.polygonscan.com/address/0xFdD62CD78dc385C9273B6f6B3281bCD423ff1D4C)
+[Runoff Smart-Contract](https://mumbai.polygonscan.com/address/0x653aCF9A0337706B8970Fa9B48688220D390CaB9)

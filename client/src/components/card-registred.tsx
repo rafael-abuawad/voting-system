@@ -1,12 +1,13 @@
 import { Label } from "@radix-ui/react-label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
-import { Voter } from "../utils/generate-voter-metadata";
+import { Voter } from "../types/voter";
 
 export function CardRegistred({ voter }: {voter: Voter | undefined}) {
     if (voter == undefined) {
         return <></>
     }
+    
     return (
         <Card>
             <CardHeader>

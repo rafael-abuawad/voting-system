@@ -1,77 +1,84 @@
 import { Card, CardHeader, CardDescription, CardContent, CardTitle } from "../components/ui/card";
 import { Progress } from "../components/ui/progress";
 import { Label } from "../components/ui/label";
+import Runoff from "../abis/Runoff.json"
+import { useContractReads } from "wagmi";
+import { Abi } from "viem";
+import { CardResult } from "../components/card-result";
 
 export function Results() {
+    const { data } = useContractReads({
+        contracts: [
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominees",
+                args: [0]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominee_names",
+                args: [0]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominees",
+                args: [1]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominee_names",
+                args: [1]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominees",
+                args: [2]
+            },
+            {
+                address: '0x004ede00c4cd487264ca39e10449a7e9d7b28826',
+                abi: Runoff.abi as Abi,
+                functionName: "nominee_names",
+                args: [2]
+            },
+        ],
+        select: (data) => {
+            const reducedArray = [];
+            let currentObject = { address: "", name: "", image: "" }
+
+            for (const item of data) {
+                if ((item.result as string).startsWith('0x')) {
+                    currentObject.address = item.result as `0x${string}`;
+                } else if (item.status === 'success') {
+                    currentObject.name = item.result as string;
+                }
+
+                if (currentObject.address && currentObject.name) {
+                    const image = "https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    reducedArray.push({ address: currentObject.address, name: currentObject.name, image });
+                    currentObject = { address: "", name: "", image: "" };
+                }
+            }
+
+            return reducedArray;
+        }
+    })
+
     return (
         <div className="space-y-6 p-6">
             <div>
                 <h3>Resultado Generales</h3>
             </div>
-            <div className="grid gid-cols-2 lg:grid-cols-3 space-x-3">
-                <div className="flex items-center">
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle>
-                                <div className="flex space-x-2">
-                                    <Label htmlFor="r1" className="font-bold">Mark Dawn</Label>
-                                </div>
-                            </CardTitle>
-                            <CardDescription>Partido Demócrata</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div>
-                                <img className="object-cover h-48 w-full rounded-xl" src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
-                            </div>
-                            <div className="space-x-2">
-                                <h3>Votos totales: 30%</h3>
-                                <Progress value={30} />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle>
-                                <div className="flex space-x-2">
-                                    <Label htmlFor="r2" className="font-bold">Joe Doe</Label>
-                                </div>
-                            </CardTitle>
-                            <CardDescription>Partido Demócrata</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div>
-                                <img className="object-cover h-48 w-full rounded-xl" src="https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
-                            </div>
-                            <div className="space-x-2">
-                                <h3>Votos totales: 45%</h3>
-                                <Progress value={45} />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle>
-                                <div className="flex space-x-2">
-                                    <Label htmlFor="r3" className="font-bold">Jane Doe</Label>
-                                </div>
-                            </CardTitle>
-                            <CardDescription>Partido Demócrata</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div>
-                                <img className="object-cover h-48 w-full rounded-xl" src="https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg" alt="" />
-                            </div>
-                            <div className="space-x-2">
-                                <h3>Votos totales: 25%</h3>
-                                <Progress value={25} />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+            <div className="grid gid-cols-2 lg:grid-cols-3 gap-3">
+                {data?.map((val, i) => (
+                    <div className="flex items-center" key={i}>
+                        <CardResult name={val.name} address={val.address as `0x${string}`} image={val.image} />
+                    </div>
+                ))}
             </div>
             <div>
                 <h2>El ganador de la contienda con el 45% de los votos es Joe Doe</h2>

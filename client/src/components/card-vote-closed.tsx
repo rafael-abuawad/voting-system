@@ -5,10 +5,8 @@ export function CardVoteClosed() {
         <Card>
             <CardHeader>
                 <CardTitle>Votar</CardTitle>
-                <CardDescription>
-                    La votación no comenzo todavia
-                </CardDescription>
+                <CardDescription>La votación aun no comenzo.</CardDescription>
             </CardHeader>
         </Card>
-    )
+    );
 }

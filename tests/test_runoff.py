@@ -81,8 +81,10 @@ def test_register_voter_and_voter_votes(token, runoff, voters, nominees, sender)
     assert runoff.totalVoters() == 3
     assert runoff.voterURI(2) == VOTER3_URI
 
-    with ape.reverts("Runoff: voting period hasn't been started yet"):
-        runoff.vote(nominee.address, sender=voter2)
+    with ape.reverts(
+        "Runoff: voting period hasn't been started yet or period has already finished"
+    ):
+        runoff.vote(nominees[0].address, sender=voter2)
 
     # starts the voting period
     runoff.start(sender=sender)
@@ -106,12 +108,27 @@ def test_register_voter_and_voter_votes(token, runoff, voters, nominees, sender)
     with ape.reverts():
         runoff.vote(nominee.address, sender=voter1)
     assert token.balanceOf(nominee.address) == ONE_VOTE
+    
+    # assert who has voted
+    assert runoff.hasVoted(voter1.address)
+    assert not runoff.hasVoted(voter2.address)
+    assert not runoff.hasVoted(voter3.address)
 
     runoff.vote(nominee.address, sender=voter2)
     assert token.balanceOf(nominee.address) == 2 * ONE_VOTE
 
+    # assert who has voted
+    assert runoff.hasVoted(voter1.address)
+    assert runoff.hasVoted(voter2.address)
+    assert not runoff.hasVoted(voter3.address)
+
     runoff.vote(nominee.address, sender=voter3)
     assert token.balanceOf(nominee.address) == 3 * ONE_VOTE
+
+    # assert who has voted
+    assert runoff.hasVoted(voter1.address)
+    assert runoff.hasVoted(voter2.address)
+    assert runoff.hasVoted(voter3.address)
 
     # ends the voting period
     runoff.complete(sender=sender)
@@ -119,9 +136,11 @@ def test_register_voter_and_voter_votes(token, runoff, voters, nominees, sender)
     assert runoff.isDone() == True
 
     # reverts on trying to vote when over
-    with ape.reverts("Runoff: voting period already finished"):
+    with ape.reverts(
+        "Runoff: voting period hasn't been started yet or period has already finished"
+    ):
         runoff.vote(nominee.address, sender=voter2)
 
     # reverts on re-start
-    with ape.reverts("Runoff: voting period already finished"):
+    with ape.reverts("Runoff: voting period has already finished"):
         runoff.start(sender=sender)

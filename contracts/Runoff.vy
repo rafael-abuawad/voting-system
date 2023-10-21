@@ -218,7 +218,7 @@ def safe_register(addr: address, uri: String[432]):
            string URI for computing `voterURI`.
     """
     assert addr not in self.nominees, "Runoff: nominee address cannot be voter"
-    assert not self._is_address_registred(addr), "Runoff: address has already been registred"
+    assert not self._address_is_registred[addr], "Runoff: address has already been registred"
 
     # New voters will be automatically assigned an incremental ID.
     # The first voter ID will be zero.
@@ -244,14 +244,14 @@ def vote(for_: address):
     @param for_ The addresss of the nominee the voter is voting
                 for.
     """
-    assert self.isOngoing == True, "Runoff: voting period hasn't been started yet"
-    assert not self.isDone, "Runoff: voting period already finished"
+    assert self.isOngoing, "Runoff: voting period hasn't been started yet or period has already finished"
     assert for_ in self.nominees, "Runoff: `for` address not registred as nominee"
     assert not self._address_has_voted[msg.sender], "Runoff: msg.sender has already voted"
 
     token: IERC20Vote = IERC20Vote(_TOKEN)
     amount: uint256 = token.one_vote()
     token.transferFrom(msg.sender, for_, amount)
+    self._address_has_voted[msg.sender] = True
 
 
 @external
@@ -271,7 +271,7 @@ def isRegistred(addr: address) -> bool:
     @dev Returns if the user is registred or not.
     @return addr The 20-byte voter address.
     """
-    return self._is_address_registred(addr)
+    return self._address_is_registred[addr]
 
 
 @external
@@ -321,7 +321,7 @@ def transfer_ownership(new_owner: address):
     """
     @dev Transfers the ownership of the contract
          to a new account `new_owner`.
-    @notice Note that this function can only be
+    @notice Note that thisa function can only be
             called by the current `owner`. Also,
             the `new_owner` cannot be the zero address.
     @param new_owner The 20-byte address of the new owner.
@@ -350,7 +350,7 @@ def start():
     """
     @dev Completes the voting period.
     """
-    assert not self.isDone, "Runoff: voting period already finished" 
+    assert not self.isDone, "Runoff: voting period has already finished" 
     self.isOngoing = True
 
 
@@ -447,18 +447,6 @@ def _total_supply() -> uint256:
     @return uint256 The 32-byte voter supply.
     """
     return len(self._all_voters)
-
-
-@internal
-@view
-def _is_address_registred(owner: address) -> bool:
-    """
-    @dev Returns if the `owner` has been registred or not.
-    @param voter_id The 20-byte address of the voter.
-    @return bool The verification whether `onwer` is registred
-            or not.
-    """
-    return self._address_is_registred[owner]
 
 
 @internal

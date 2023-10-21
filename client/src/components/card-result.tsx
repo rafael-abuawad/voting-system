@@ -1,21 +1,19 @@
-import { Abi } from "viem";
+import { Abi, formatUnits } from "viem";
 import { useContractRead } from "wagmi";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/card";
 import { Progress } from "./ui/progress";
-import ERC20 from "../abis/ERC20.json"
+import ERC20 from "../abis/ERC20.json";
 
-
-export function CardResult({ address, name, image }: { address: `0x${string}`, name: string, image: string }) {
+export function CardResult({ address, name, image }: { address: `0x${string}`; name: string; image: string }) {
     const { data } = useContractRead({
-        address: '0xcD2Da9dB2Fd2c6e17adAe4B55D1AFa29a089A0fd',
+        address: "0x0063F86f123BDb2dC047B26c2Fe5a631d7Dde5d4",
         abi: ERC20.abi as Abi,
         functionName: "balanceOf",
         args: [address],
         select: (data) => {
-            console.log(Number(data))
-            return Number(data)
-        }
-    })
+            return formatUnits(data as bigint, 18);
+        },
+    });
 
     return (
         <Card className="w-full">
@@ -26,10 +24,10 @@ export function CardResult({ address, name, image }: { address: `0x${string}`, n
             <CardContent>
                 <div className="space-y-3">
                     <img className="object-cover h-48 w-full rounded-xl" src={image} alt={name} />
-                    <p className="text-muted-foreground">Votos totales: {data ? data * 10 : 0}%</p>
-                    <Progress max={10} value={data} />
+                    <p className="text-muted-foreground">Votos totales: {data ? Number(data) * 10 : 0}%</p>
+                    <Progress max={10} value={Number(data)} />
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }

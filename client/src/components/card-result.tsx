@@ -6,7 +6,7 @@ import ERC20 from "../abis/ERC20.json";
 
 export function CardResult({ address, name, image }: { address: `0x${string}`; name: string; image: string }) {
     const { data } = useContractRead({
-        address: "0xFdD62CD78dc385C9273B6f6B3281bCD423ff1D4C",
+        address: "0x852286113922e157719073346e99995B6E37072C",
         abi: ERC20.abi as Abi,
         functionName: "balanceOf",
         args: [address],

@@ -23,6 +23,7 @@ ape accounts generate sender
 ape compile
 ape test
 ape run scripts/deploy.py --network polygon:mumbai:alchemy
+ape console --network polygon:mumbai:alchemy
 ```
 
 ## Pocketbase Server
@@ -40,5 +41,5 @@ Use the following
 email=demo@mail.com
 password=2L@.jQJemz:DE9!
 ```
-[Token Smart-Contract](https://mumbai.polygonscan.com/address/0xFdD62CD78dc385C9273B6f6B3281bCD423ff1D4C)
-[Runoff Smart-Contract](https://mumbai.polygonscan.com/address/0x653aCF9A0337706B8970Fa9B48688220D390CaB9)
+[Token Smart-Contract](https://mumbai.polygonscan.com/address/0x852286113922e157719073346e99995B6E37072C)
+[Runoff Smart-Contract](https://mumbai.polygonscan.com/address/0x00C79B6F4125D7516C42C8f35539505E39F9B9b3)

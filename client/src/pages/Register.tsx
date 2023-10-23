@@ -11,7 +11,7 @@ export function Register() {
     const [voter, setVoter] = useState<Voter | any>();
     const { address } = useAccount();
     const { write } = useContractWrite({
-        address: "0x653aCF9A0337706B8970Fa9B48688220D390CaB9",
+        address: "0x00C79B6F4125D7516C42C8f35539505E39F9B9b3",
         abi: Runoff.abi,
         functionName: "safe_register",
     });
